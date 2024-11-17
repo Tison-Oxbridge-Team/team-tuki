@@ -6,6 +6,7 @@ const authRoutes = require('./routes/auth.js');
 const startupRoutes = require('./routes/startups.js');
 const roundRoutes = require('./routes/rounds.js');
 const scoreRoutes = require('./routes/scores.js');
+const judgeRoutes = require('./routes/judges.js')
 const cors = require('cors');
 
 const app = express();
@@ -24,6 +25,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/startups', startupRoutes);
 app.use('/api/rounds', roundRoutes);
 app.use('/api/scores', scoreRoutes);
+app.use('/api/judges', judgeRoutes);
 
 
 
