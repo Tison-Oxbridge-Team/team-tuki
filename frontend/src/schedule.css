@@ -1,0 +1,77 @@
+body,
+html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  font-family: "Inter", sans-serif;
+  overflow-x: hidden;
+}
+
+.large-card {
+  background-color: rgb(224, 224, 228);
+  border-radius: 5px;
+  padding: 20px;
+  color: #0a2540;
+  width: 1242px;
+  height: 800px;
+  margin: 20px auto;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.inner-card-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.pink-card {
+  background-color: rgb(255, 252, 252);
+  border-radius: 5px;
+  width: 45%; /* Adjust to fit side by side */
+  height: 24rem;
+  padding: 20px;
+  color: #0a2540;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  display: flex; /* Enable flexbox */
+  flex-direction: column; /* Arrange items vertically */
+  justify-content: center; /* Center items vertically */
+  align-items: center; /* Center items horizontally */
+  position: relative;
+}
+.pink-card h4 {
+  position: absolute; /* Fix the title at the top */
+  top: 14px; /* Space from the top edge */
+  left: 50%; /* Horizontal center alignment */
+  transform: translateX(-50%); /* Adjust for perfect centering */
+  margin: 0;
+  font-size: 1.5rem;
+  text-align: center;
+}
+
+/* CALENDAR STYLING */
+.react-calendar {
+  width: 100%;
+  max-width: 100%;
+  background-color: #fff;
+  border-radius: 10px;
+  /* border: 1px solid #ddd; */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-family: Arial, sans-serif;
+}
+
+.react-calendar__tile--active {
+  background-color: #0a2540;
+  color: #fff;
+}
+
+.selected-date {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #0a2540;
+}

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Judges from "./judges";
+import Schedule from "./schedule";
 import "./index.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -200,12 +201,12 @@ function App() {
         >
           Schedule
         </div>
-        <div
+        {/* <div
           className={`tab ${activeTab === "rounds" ? "active" : ""}`}
           onClick={() => setActiveTab("rounds")}
         >
           Rounds
-        </div>
+        </div> */}
         <div
           className={`tab ${activeTab === "settings" ? "active" : ""}`}
           onClick={() => setActiveTab("settings")}
@@ -214,35 +215,45 @@ function App() {
         </div>
       </div>
       {/* Search Bar */}
-      <div className="search-container">
-        <input
-          type="text"
-          className="search-input"
-          placeholder="Search..."
-          onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-        />
-        <button className="search-button" onClick={handleSearch}>
-          <FontAwesomeIcon icon={faMagnifyingGlass} />
-        </button>
-      </div>
+      {["startups", "judges"].includes(activeTab) && (
+        <div className="search-container">
+          <input
+            type="text"
+            className="search-input"
+            placeholder="Search..."
+            onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+          />
+          <button className="search-button" onClick={handleSearch}>
+            <FontAwesomeIcon icon={faMagnifyingGlass} />
+          </button>
+        </div>
+      )}
       {/* Buttons */}
-      <div className="button-container">
-        <button
-          className="add-startup-button"
-          onClick={() => setShowModal(true)}
-        >
-          <FontAwesomeIcon icon={faPlus} />
-          {activeTab === "judges" ? "Add Judge" : "Add Startup"}
-        </button>
-        <button className="import-button">
-          <FontAwesomeIcon icon={faDownload} />
-          Import
-        </button>
-        <button className="export-button">
-          <FontAwesomeIcon icon={faUpload} />
-          Export
-        </button>
-      </div>
+      {/* Buttons */}
+      {activeTab !== "settings" && (
+        <div className="button-container">
+          <button
+            className="add-startup-button"
+            onClick={() => setShowModal(true)}
+          >
+            <FontAwesomeIcon icon={faPlus} />
+            {activeTab === "judges"
+              ? "Add Judge"
+              : activeTab === "schedule"
+              ? "Add Schedule"
+              : "Add Startup"}
+          </button>
+          <button className="import-button">
+            <FontAwesomeIcon icon={faDownload} />
+            Import
+          </button>
+          <button className="export-button">
+            <FontAwesomeIcon icon={faUpload} />
+            Export
+          </button>
+        </div>
+      )}
+
       {/* Table */}
       {activeTab === "startups" && (
         <div className="table-wrapper">
@@ -287,6 +298,7 @@ function App() {
           </table>
         </div>
       )}
+
       {activeTab === "judges" && (
         <Judges
           showModal={showModal}
@@ -301,6 +313,7 @@ function App() {
           handleEditJudgeRow={handleEditJudgeRow}
         />
       )}
+      {activeTab === "schedule" && <Schedule />}
       {/* Modal for Startups */}
       {showModal && activeTab === "startups" && (
         <div className="modal">
