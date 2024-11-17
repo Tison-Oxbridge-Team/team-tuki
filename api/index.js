@@ -20,7 +20,6 @@ connectDB()
 
 
 
-
 app.use('/api/auth', authRoutes);
 app.use('/api/startups', startupRoutes);
 app.use('/api/rounds', roundRoutes);
