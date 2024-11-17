@@ -313,7 +313,9 @@ function App() {
           handleEditJudgeRow={handleEditJudgeRow}
         />
       )}
-      {activeTab === "schedule" && <Schedule />}
+      {activeTab === "schedule" && (
+        <Schedule showModal={showModal} setShowModal={setShowModal} />
+      )}
       {/* Modal for Startups */}
       {showModal && activeTab === "startups" && (
         <div className="modal">

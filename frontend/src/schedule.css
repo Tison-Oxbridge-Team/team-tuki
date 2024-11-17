@@ -14,7 +14,7 @@ html {
   padding: 20px;
   color: #0a2540;
   width: 1242px;
-  height: 800px;
+  min-height: 800px;
   margin: 20px auto;
   margin-top: 2rem;
   margin-bottom: 2rem;
@@ -25,33 +25,55 @@ html {
 .inner-card-container {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
+  gap: 20px;
   margin-top: 20px;
 }
 
 .pink-card {
   background-color: rgb(255, 252, 252);
   border-radius: 5px;
-  width: 45%; /* Adjust to fit side by side */
-  height: 24rem;
+  width: 45%;
+  min-height: 24rem;
   padding: 20px;
   color: #0a2540;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   text-align: center;
-  display: flex; /* Enable flexbox */
-  flex-direction: column; /* Arrange items vertically */
-  justify-content: center; /* Center items vertically */
-  align-items: center; /* Center items horizontally */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
   position: relative;
 }
+
 .pink-card h4 {
-  position: absolute; /* Fix the title at the top */
-  top: 14px; /* Space from the top edge */
-  left: 50%; /* Horizontal center alignment */
-  transform: translateX(-50%); /* Adjust for perfect centering */
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
   margin: 0;
   font-size: 1.5rem;
   text-align: center;
+}
+
+.time-slot-card {
+  background-color: #f0f0f0;
+  padding: 15px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+.time-slot-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 400px;
+  overflow-y: auto;
+  width: 100%;
+  margin-top: 50px;
+  padding: 10px;
 }
 
 /* CALENDAR STYLING */
@@ -60,18 +82,185 @@ html {
   max-width: 100%;
   background-color: #fff;
   border-radius: 10px;
-  /* border: 1px solid #ddd; */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   font-family: Arial, sans-serif;
+  border: none;
+  margin-top: 20px;
 }
 
 .react-calendar__tile--active {
-  background-color: #0a2540;
+  background-color: #0a2540 !important;
   color: #fff;
 }
 
 .selected-date {
-  margin-top: 10px;
+  margin-top: 15px;
   font-size: 14px;
   color: #0a2540;
+}
+
+/* MODAL STYLING */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 2.5rem;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 600px;
+  position: relative;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  max-height: 80vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.close-button {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 1.5rem;
+  cursor: pointer;
+  background: none;
+  border: none;
+  color: #666;
+  padding: 5px;
+  transition: color 0.3s ease;
+  z-index: 1;
+}
+
+.close-button:hover {
+  color: #0a2540;
+}
+
+.form-title {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  color: #0a2540;
+  padding-top: 0.5rem;
+  width: 100%;
+}
+
+.form-field {
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.form-field label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #0a2540;
+  text-align: center;
+  width: 100%;
+}
+
+.form-field input,
+.form-field select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Style specifically for date input */
+.form-field input[type="date"] {
+  font-family: "Inter", sans-serif;
+  cursor: pointer;
+  background-color: white;
+  text-align: center;
+}
+
+/* Style for date input calendar icon */
+.form-field input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  padding: 0.2rem;
+  margin-left: 0.5rem;
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+}
+
+.form-field input[type="date"]::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+}
+
+.form-field input:focus,
+.form-field select:focus {
+  outline: none;
+  border-color: #0a2540;
+  box-shadow: 0 0 0 3px rgba(10, 37, 64, 0.1);
+}
+
+.submit-button {
+  background-color: #0a2540;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+  max-width: 400px;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+  margin: 1rem auto;
+}
+
+.submit-button:hover {
+  background-color: #0056b3;
+}
+
+/* Media Queries */
+@media (max-width: 1280px) {
+  .large-card {
+    width: 95%;
+    margin: 1rem auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .inner-card-container {
+    flex-direction: column;
+  }
+
+  .pink-card {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .modal-content {
+    width: 95%;
+    padding: 1.5rem;
+    margin: 1rem;
+  }
+
+  .form-field {
+    max-width: 100%;
+  }
+
+  .submit-button {
+    padding: 0.5rem 1rem;
+  }
 }
