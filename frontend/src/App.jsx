@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Judges from "./judges";
 import "./index.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -17,7 +18,10 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 function App() {
+  const [activeTab, setActiveTab] = useState("startups");
   const [showModal, setShowModal] = useState(false);
+
+  // Startup states
   const [rows, setRows] = useState([]);
   const [newRow, setNewRow] = useState({
     company: "",
@@ -25,10 +29,19 @@ function App() {
     teamLeader: "",
     email: "",
     pitchSlot: "",
-    status: "-----" /* default value */,
+    status: "-----",
   });
 
-  // Handle input changes for the modal form
+  // Judges states
+  const [judgeRows, setJudgeRows] = useState([]);
+  const [newJudgeRow, setNewJudgeRow] = useState({
+    idNo: "",
+    name: "",
+    email: "",
+    status: "Assigned",
+  });
+
+  // Handle input changes for the startup modal form
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewRow((prevRow) => ({
@@ -37,29 +50,62 @@ function App() {
     }));
   };
 
-  // Add a new row or update an existing one
+  // Handle input changes for the judges modal form
+  const handleJudgeInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewJudgeRow((prevRow) => ({
+      ...prevRow,
+      [name]: value,
+    }));
+  };
+
+  // Add a new startup row or update an existing one
   const handleAddRow = () => {
     setRows((prevRows) => [...prevRows, newRow]);
-    setShowModal(false); // Close modal after adding
+    setShowModal(false);
     setNewRow({
       company: "",
       category: "",
       teamLeader: "",
       email: "",
       pitchSlot: "",
-      status: "In Session", //reset to default
+      status: "In Session",
     });
   };
 
-  // Delete a row
+  // Add a new judge row or update an existing one
+  const handleAddJudgeRow = () => {
+    setJudgeRows((prevRows) => [...prevRows, newJudgeRow]);
+    setShowModal(false);
+    setNewJudgeRow({
+      idNo: "",
+      name: "",
+      email: "",
+      status: "Assigned",
+    });
+  };
+
+  // Delete a startup row
   const handleDeleteRow = (index) => {
     setRows(rows.filter((_, i) => i !== index));
   };
 
-  // Edit an existing row
+  // Delete a judge row
+  const handleDeleteJudgeRow = (index) => {
+    setJudgeRows(judgeRows.filter((_, i) => i !== index));
+  };
+
+  // Edit an existing startup row
   const handleEditRow = (index) => {
     setNewRow(rows[index]);
-    setRows(rows.filter((_, i) => i !== index)); // Temporarily remove row to avoid duplication
+    setRows(rows.filter((_, i) => i !== index));
+    setShowModal(true);
+  };
+
+  // Edit an existing judge row
+  const handleEditJudgeRow = (index) => {
+    setNewJudgeRow(judgeRows[index]);
+    setJudgeRows(judgeRows.filter((_, i) => i !== index));
     setShowModal(true);
   };
 
@@ -91,7 +137,6 @@ function App() {
         </label>
         <FontAwesomeIcon icon={faUser} className="user-icon" cursor="pointer" />
       </div>
-
       {/* Cards */}
       <div className="card-container">
         <div className="card shadow">
@@ -135,16 +180,39 @@ function App() {
           </div>
         </div>
       </div>
-
       {/* Tabs */}
       <div className="tabs-container">
-        <div className="tab active">Startups</div>
-        <div className="tab">Judges</div>
-        <div className="tab">Schedule</div>
-        <div className="tab">Rounds</div>
-        <div className="tab">Settings</div>
+        <div
+          className={`tab ${activeTab === "startups" ? "active" : ""}`}
+          onClick={() => setActiveTab("startups")}
+        >
+          Startups
+        </div>
+        <div
+          className={`tab ${activeTab === "judges" ? "active" : ""}`}
+          onClick={() => setActiveTab("judges")}
+        >
+          Judges
+        </div>
+        <div
+          className={`tab ${activeTab === "schedule" ? "active" : ""}`}
+          onClick={() => setActiveTab("schedule")}
+        >
+          Schedule
+        </div>
+        <div
+          className={`tab ${activeTab === "rounds" ? "active" : ""}`}
+          onClick={() => setActiveTab("rounds")}
+        >
+          Rounds
+        </div>
+        <div
+          className={`tab ${activeTab === "settings" ? "active" : ""}`}
+          onClick={() => setActiveTab("settings")}
+        >
+          Settings
+        </div>
       </div>
-
       {/* Search Bar */}
       <div className="search-container">
         <input
@@ -157,7 +225,6 @@ function App() {
           <FontAwesomeIcon icon={faMagnifyingGlass} />
         </button>
       </div>
-
       {/* Buttons */}
       <div className="button-container">
         <button
@@ -165,7 +232,7 @@ function App() {
           onClick={() => setShowModal(true)}
         >
           <FontAwesomeIcon icon={faPlus} />
-          Add Startup
+          {activeTab === "judges" ? "Add Judge" : "Add Startup"}
         </button>
         <button className="import-button">
           <FontAwesomeIcon icon={faDownload} />
@@ -176,52 +243,66 @@ function App() {
           Export
         </button>
       </div>
-
       {/* Table */}
-      <div className="table-wrapper">
-        <table className="startup-table">
-          <thead>
-            <tr>
-              <th>Company</th>
-              <th>Category</th>
-              <th>Team Leader</th>
-              <th>Email</th>
-              <th>Pitch Slot</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((row, index) => (
-              <tr key={index}>
-                <td>{row.company}</td>
-                <td>{row.category}</td>
-                <td>{row.teamLeader}</td>
-                <td>{row.email}</td>
-                <td>{formatTime(row.pitchSlot)}</td>
-                <td>{row.status}</td>
-                <td>
-                  <FontAwesomeIcon
-                    icon={faPenToSquare}
-                    className="icon"
-                    cursor="pointer"
-                    onClick={() => handleEditRow(index)}
-                  />
-                  <FontAwesomeIcon
-                    icon={faTrash}
-                    className="icon"
-                    cursor="pointer"
-                    onClick={() => handleDeleteRow(index)}
-                  />
-                </td>
+      {activeTab === "startups" && (
+        <div className="table-wrapper">
+          <table className="startup-table">
+            <thead>
+              <tr>
+                <th>Company</th>
+                <th>Category</th>
+                <th>Team Leader</th>
+                <th>Email</th>
+                <th>Pitch Slot</th>
+                <th>Status</th>
+                <th>Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      {/* Modal */}
-      {showModal && (
+            </thead>
+            <tbody>
+              {rows.map((row, index) => (
+                <tr key={index}>
+                  <td>{row.company}</td>
+                  <td>{row.category}</td>
+                  <td>{row.teamLeader}</td>
+                  <td>{row.email}</td>
+                  <td>{formatTime(row.pitchSlot)}</td>
+                  <td>{row.status}</td>
+                  <td>
+                    <FontAwesomeIcon
+                      icon={faPenToSquare}
+                      className="icon"
+                      cursor="pointer"
+                      onClick={() => handleEditRow(index)}
+                    />
+                    <FontAwesomeIcon
+                      icon={faTrash}
+                      className="icon"
+                      cursor="pointer"
+                      onClick={() => handleDeleteRow(index)}
+                    />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+      {activeTab === "judges" && (
+        <Judges
+          showModal={showModal}
+          setShowModal={setShowModal}
+          judgeRows={judgeRows}
+          setJudgeRows={setJudgeRows}
+          newJudgeRow={newJudgeRow}
+          setNewJudgeRow={setNewJudgeRow}
+          handleJudgeInputChange={handleJudgeInputChange}
+          handleAddJudgeRow={handleAddJudgeRow}
+          handleDeleteJudgeRow={handleDeleteJudgeRow}
+          handleEditJudgeRow={handleEditJudgeRow}
+        />
+      )}
+      {/* Modal for Startups */}
+      {showModal && activeTab === "startups" && (
         <div className="modal">
           <div className="modal-content">
             <span className="close-button" onClick={() => setShowModal(false)}>
@@ -255,7 +336,6 @@ function App() {
                   />
                 </label>
               </div>
-
               <div className="form-field">
                 <label>
                   Team Leader:
@@ -292,7 +372,6 @@ function App() {
                   />
                 </label>
               </div>
-
               <div className="form-field">
                 <label>Status:</label>
                 <select
