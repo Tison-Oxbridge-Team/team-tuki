@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Judges from "./judges";
 import Schedule from "./schedule";
+import PitchScoring from "./pages/PitchScoring";
 import "./index.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -201,6 +202,12 @@ function App() {
         >
           Schedule
         </div>
+        <div
+        className={`tab ${activeTab === "PitchScoring" ? "active" : ""}`}
+        onClick={() => setActiveTab("PitchScoring")}
+      >
+        Pitch Scoring
+      </div>
         {/* <div
           className={`tab ${activeTab === "rounds" ? "active" : ""}`}
           onClick={() => setActiveTab("rounds")}
@@ -241,6 +248,8 @@ function App() {
               ? "Add Judge"
               : activeTab === "schedule"
               ? "Add Schedule"
+              : activeTab === "PitchScoring"
+              ? "Add Pitch"
               : "Add Startup"}
           </button>
           <button className="import-button">
@@ -316,6 +325,8 @@ function App() {
       {activeTab === "schedule" && (
         <Schedule showModal={showModal} setShowModal={setShowModal} />
       )}
+      {activeTab === "schedule" && <Schedule />}
+      {activeTab === "PitchScoring" && <PitchScoring />}
       {/* Modal for Startups */}
       {showModal && activeTab === "startups" && (
         <div className="modal">
