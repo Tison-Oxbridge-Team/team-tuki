@@ -59,7 +59,7 @@ const Schedule = ({ showModal, setShowModal }) => {
           </p>
         </div>
         <div className="pink-card">
-          <h4>TIME SLOTS</h4>
+          <h4>TIME SCHEDULE</h4>
           <div className="time-slot-container">
             {scheduleData.map((slot, index) => (
               <div key={index} className="time-slot-card">
