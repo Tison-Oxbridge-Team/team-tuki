@@ -15,3 +15,5 @@ const ScoreSchema = new mongoose.Schema({
 });
 
 module.exports = mongoose.model("Score", ScoreSchema);
+
+//Check on the criteria scores.. 
