@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { ChevronDown, Star, Clock, Calendar, Moon, User, MessageCircle, Download } from 'lucide-react';
 import axios from 'axios';
+import PropTypes from 'prop-types';
 
 const MetricCard = ({ title, value, subtitle, icon: Icon }) => (
-  <div className="bg-white rounded-lg p-4 flex flex-col h-full border border-gray-200 hover:shadow-lg transition-shadow">
-    <div className="flex justify-between items-start mb-2">
+  <div className="flex flex-col justify-between items-start mb-2">
+    <div className="flex justify-between items-start">
       <div>
         <h3 className="text-4xl font-semibold text-gray-900">{value}</h3>
         <p className="text-sm text-gray-500">{subtitle}</p>
@@ -15,17 +16,31 @@ const MetricCard = ({ title, value, subtitle, icon: Icon }) => (
   </div>
 );
 
+
+
+MetricCard.propTypes = {
+  title: PropTypes.string.isRequired,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  subtitle: PropTypes.string,
+  icon: PropTypes.elementType
+};
+
 const NavTab = ({ label, active }) => (
-  <button
-    className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
-      active 
-        ? 'bg-white text-gray-900 shadow-sm' 
-        : 'text-gray-600 hover:text-gray-900 hover:bg-white/50'
-    }`}
-  >
-    {label}
-  </button>
+    <button
+      className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+        active
+          ? 'bg-white text-gray-900 shadow-sm'
+          : 'text-gray-600 hover:text-gray-900 hover:bg-white/50'
+      }`}
+    >
+      {label}
+    </button>
 );
+
+NavTab.propTypes = {
+  label: PropTypes.string.isRequired,
+  active: PropTypes.bool
+};
 
 const emojiScores = [
   { emoji: "😔", score: 3 },
@@ -36,20 +51,36 @@ const emojiScores = [
 ];
 
 const ScoreButton = ({ emoji, score, selected, onClick }) => (
-  <button
-    onClick={onClick}
-    className={`w-12 h-12 rounded-full flex items-center justify-center text-2xl transition-all ${
-      selected
-        ? 'bg-blue-500 scale-110 shadow-lg'
-        : 'bg-gray-100 hover:bg-gray-200'
-    }`}
-  >
-    {emoji}
-  </button>
+    <button
+      onClick={onClick}
+      title={`Score: ${score}`}
+      className={`w-12 h-12 rounded-full flex items-center justify-center text-2xl transition-all ${
+        selected
+          ? 'bg-blue-500 scale-110 shadow-lg'
+          : 'bg-gray-100 hover:bg-gray-200'
+      }`}
+    >
+      {emoji}
+    </button>
 );
 
+ScoreButton.propTypes = {
+  emoji: PropTypes.string.isRequired,
+  score: PropTypes.number.isRequired,
+  selected: PropTypes.bool.isRequired,
+  onClick: PropTypes.func.isRequired
+};
+
 const ScoringSection = ({ title, weight, questions, onScoresUpdate, onFeedbackUpdate }) => {
-  const [isOpen, setIsOpen] = useState(true);
+ScoringSection.propTypes = {
+  title: PropTypes.string.isRequired,
+  weight: PropTypes.number.isRequired,
+  questions: PropTypes.arrayOf(PropTypes.string).isRequired,
+  onScoresUpdate: PropTypes.func.isRequired,
+  onFeedbackUpdate: PropTypes.func.isRequired
+};
+
+const [isOpen, setIsOpen] = useState(true);
   const [scores, setScores] = useState({});
   const [feedback, setFeedback] = useState('');
 
@@ -122,7 +153,7 @@ const PitchScoring = () => {
   const [sectionFeedback, setSectionFeedback] = useState({});
   const [generalFeedback, setGeneralFeedback] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [downloadUrl, setDownloadUrl] = useState(null);
+
   const [isDownloading, setIsDownloading] = useState(false);
 
   const scoringSections = [
@@ -228,13 +259,9 @@ const PitchScoring = () => {
   };
 
   const handleSubmit = async () => {
-    setIsSubmitting(true);
-    setIsDownloading(true);
-
-    const handleSubmit = async () => {
       setIsSubmitting(true);
       setIsDownloading(true);
-    
+
       const formattedData = {
         teamName: "AI Innovators",
         pitchNumber: 8,
@@ -262,7 +289,7 @@ const PitchScoring = () => {
     
         // Create a URL for the blob
         const url = window.URL.createObjectURL(blob);
-        setDownloadUrl(url);
+
     
         // Automatically trigger download
         const link = document.createElement('a');
@@ -280,9 +307,6 @@ const PitchScoring = () => {
         setIsDownloading(false);
       }
     };
-    
-
-  };
   return (
     <div className="min-h-screen bg-[#0a1929] text-gray-900">
       <header className="bg-[#0a1929] text-white px-6 py-4 flex justify-between items-center border-b border-gray-700">
@@ -296,6 +320,7 @@ const PitchScoring = () => {
 
       <main className="p-6 bg-gray-50 min-h-screen">
         <div className="max-w-6xl mx-auto">
+          <h2 className="text-2xl font-bold mb-6">Live Scoring</h2>
           <h2 className="text-2xl font-bold mb-6">Live Scoring</h2>
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
@@ -387,12 +412,14 @@ const PitchScoring = () => {
             Skip
           </button>
         </div>
-      </div>
       
           </div>
         </div>
+      </div>
       </main>
     </div>
+    
+  
   );
 };
 
