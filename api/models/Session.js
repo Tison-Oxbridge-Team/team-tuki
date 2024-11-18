@@ -5,10 +5,8 @@ const SessionSchema = new mongoose.Schema({
   date: { type: Date, required: true },
   startTime: { type: String, required: true },
   endTime: { type: String, required: true },
-  room: { type: String, required: true }, // Physical room
-  remoteRoom: { type: String }, // Optional remote link
   judges: [{ type: mongoose.Schema.Types.ObjectId, ref: "Judge" }], // Assigned judges
-  timeslots: [{ type: mongoose.Schema.Types.ObjectId, ref: "Timeslot" }], // Associated timeslots
+  // timeslots: [{ type: mongoose.Schema.Types.ObjectId, ref: "Timeslot" }], // Associated timeslots
   createdAt: { type: Date, default: Date.now },
 });
 

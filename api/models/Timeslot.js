@@ -7,7 +7,6 @@ const TimeslotSchema = new mongoose.Schema({
   endTime: { type: String, required: true },
   room: { type: String, required: true }, // Assigned room
   remoteRoom: { type: String }, // Optional remote room
-  scores: [{ type: mongoose.Schema.Types.ObjectId, ref: "Score" }], // Scoring information
   createdAt: { type: Date, default: Date.now },
 });
 

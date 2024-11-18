@@ -10,7 +10,8 @@ const StartupSchema = new mongoose.Schema({
     enum: ["Pending", "In Progress", "Completed"],
     default: "Pending",
   },
-  room: { type: String, required: false }, // Optional: Designated room
+  room: { type: String, required: false }, // Optional: Designated room  
+  scores: [{ type: mongoose.Schema.Types.ObjectId, ref: "Score" }], // Scoring information
   remoteRoom: { type: String, required: false }, // Optional: Remote room
   createdAt: { type: Date, default: Date.now },
 });
