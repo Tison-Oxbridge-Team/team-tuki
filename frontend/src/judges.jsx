@@ -1,3 +1,4 @@
+import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPenToSquare,
@@ -6,6 +7,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import PropTypes from "prop-types";
 import "./judges.css";
+import { useEffect } from "react";
 
 function Judges({
   showModal,
@@ -13,11 +15,62 @@ function Judges({
   judgeRows,
   setJudgeRows,
   newJudgeRow,
+  setNewJudgeRow,
   handleJudgeInputChange,
-  handleAddJudgeRow,
-  handleDeleteJudgeRow,
-  handleEditJudgeRow,
 }) {
+  // Set base URL for Axios
+  const axiosInstance = axios.create({
+    baseURL: "http://localhost:5001/api",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`, // Pass token for authentication
+    },
+  });
+
+  // Fetch judges from the backend
+  const fetchJudges = async () => {
+    try {
+      const response = await axiosInstance.get("/judges");
+      setJudgeRows(response.data.judges); // Assume API returns { judges: [...] }
+    } catch (error) {
+      console.error("Error fetching judges:", error.response?.data || error.message);
+    }
+  };
+
+  // Add a new judge
+  const handleAddJudgeRow = async () => {
+    try {
+      const response = await axiosInstance.post("/judges", newJudgeRow);
+      setJudgeRows((prevRows) => [...prevRows, response.data]); // Add new judge to the list
+      setShowModal(false);
+      setNewJudgeRow({ idNo: "", name: "", email: "", status: "Assigned" }); // Reset form
+    } catch (error) {
+      console.error("Error adding judge:", error.response?.data || error.message);
+    }
+  };
+
+  // Delete a judge
+  const handleDeleteJudgeRow = async (index) => {
+    const judgeToDelete = judgeRows[index];
+    try {
+      await axiosInstance.delete(`/judges/${judgeToDelete._id}`);
+      setJudgeRows(judgeRows.filter((_, i) => i !== index)); // Remove from UI
+    } catch (error) {
+      console.error("Error deleting judge:", error.response?.data || error.message);
+    }
+  };
+
+  // Edit a judge
+  const handleEditJudgeRow = (index) => {
+    setNewJudgeRow(judgeRows[index]); // Load judge into modal
+    setJudgeRows(judgeRows.filter((_, i) => i !== index)); // Temporarily remove from list
+    setShowModal(true);
+  };
+
+  // Fetch judges on component mount
+  useEffect(() => {
+    fetchJudges();
+  }, []);
+
   return (
     <div>
       {/* Table */}
@@ -146,7 +199,6 @@ function Judges({
     </div>
   );
 }
-
 Judges.propTypes = {
   showModal: PropTypes.bool.isRequired,
   setShowModal: PropTypes.func.isRequired,
@@ -155,9 +207,6 @@ Judges.propTypes = {
   newJudgeRow: PropTypes.object.isRequired,
   setNewJudgeRow: PropTypes.func.isRequired,
   handleJudgeInputChange: PropTypes.func.isRequired,
-  handleAddJudgeRow: PropTypes.func.isRequired,
-  handleDeleteJudgeRow: PropTypes.func.isRequired,
-  handleEditJudgeRow: PropTypes.func.isRequired,
 };
 
 export default Judges;
