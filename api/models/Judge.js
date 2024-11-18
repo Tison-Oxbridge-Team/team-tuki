@@ -1,11 +1,14 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const JudgeSchema = new mongoose.Schema({
-    idNo: { type: String, unique: true, required: true }, // ID number
-    name: { type: String, required: true },
-    email: { type: String, unique: true, required: true },
-    status: { type: String, enum: ["Assigned", "Unassigned", "Unavailable"], default: "Unassigned" },
-    createdAt: { type: Date, default: Date.now },
+  name: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  expertise: { type: [String], required: true },
+  startupLoad: { type: Number, default: 0 },
+  assignedStartups: [{ type: mongoose.Schema.Types.ObjectId, ref: "Startup" }],
+  sessions: [{ type: mongoose.Schema.Types.ObjectId, ref: "Schedule" }],
+  createdAt: { type: Date, default: Date.now },
+  password: { type: String, required: true }, // For login
 });
 
-module.exports = mongoose.model('Judge', JudgeSchema);
+module.exports = mongoose.model("Judge", JudgeSchema);

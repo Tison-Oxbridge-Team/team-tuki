@@ -2,11 +2,11 @@ const express = require('express');
 const { setupWebSocketServer } = require('./services/webSocketService.js');
 const http = require('http');
 const { connectDB } = require('./db.js');// Import routes
-const authRoutes = require('./routes/auth.js');
+const authRoutes = require('./routes/adminAuth.js');
 const startupRoutes = require('./routes/startups.js');
 const roundRoutes = require('./routes/rounds.js');
-const scoreRoutes = require('./routes/scores.js');
 const judgeRoutes = require('./routes/judges.js')
+const schedulesRoutes = require("./routes/schedule.js")
 const cors = require('cors');
 
 const app = express();
@@ -21,11 +21,13 @@ connectDB()
 
 
 
-app.use('/api/auth', authRoutes);
+// app.use('/api/auth', authRoutes);
 app.use('/api/startups', startupRoutes);
 app.use('/api/rounds', roundRoutes);
-app.use('/api/scores', scoreRoutes);
 app.use('/api/judges', judgeRoutes);
+app.use('/api/schedules', schedulesRoutes);
+app.use('/api/admin-auth', authRoutes);
+
 
 
 
