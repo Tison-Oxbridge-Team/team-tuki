@@ -5,9 +5,13 @@ const TimeslotSchema = new mongoose.Schema({
   startupId: { type: mongoose.Schema.Types.ObjectId, ref: "Startup", required: true },
   startTime: { type: String, required: true },
   endTime: { type: String, required: true },
+  status: {
+    type: String,
+    enum: ["Pending", "In Progress", "Completed"],
+    default: "Pending",
+  },
   room: { type: String, required: true }, // Assigned room
   remoteRoom: { type: String }, // Optional remote room
-  scores: [{ type: mongoose.Schema.Types.ObjectId, ref: "Score" }], // Scoring information
   createdAt: { type: Date, default: Date.now },
 });
 

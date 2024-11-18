@@ -3,7 +3,6 @@ const mongoose = require("mongoose");
 const ScoreSchema = new mongoose.Schema({
   judgeId: { type: mongoose.Schema.Types.ObjectId, ref: "Judge", required: true },
   startupId: { type: mongoose.Schema.Types.ObjectId, ref: "Startup", required: true },
-  roundId: { type: mongoose.Schema.Types.ObjectId, ref: "Round", required: true },
   criteriaScores: [
     {
       criterionId: { type: mongoose.Schema.Types.ObjectId, ref: "Criterion", required: true },
@@ -16,3 +15,5 @@ const ScoreSchema = new mongoose.Schema({
 });
 
 module.exports = mongoose.model("Score", ScoreSchema);
+
+//Check on the criteria scores.. 
