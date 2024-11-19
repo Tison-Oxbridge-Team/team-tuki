@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const SessionSchema = new mongoose.Schema({
   roundId: { type: mongoose.Schema.Types.ObjectId, ref: "Round", required: true }, //Which round the session is into
-  date: { type: Date, required: true },
+  scheduleId: { type: mongoose.Schema.Types.ObjectId, ref: "Schedule", required: true }, //Which schedule the session is into
   startTime: { type: String, required: true },
   endTime: { type: String, required: true },
   judges: [{ type: mongoose.Schema.Types.ObjectId, ref: "Judge" }], // Assigned judges
@@ -12,3 +12,4 @@ const SessionSchema = new mongoose.Schema({
 });
 
 module.exports = mongoose.model("Session", SessionSchema);
+// date: { type: Date, required: true }, // Not necessary, already in the schedule

@@ -5,7 +5,7 @@ const ScoreSchema = new mongoose.Schema({
   startupId: { type: mongoose.Schema.Types.ObjectId, ref: "Startup", required: true },
   criteriaScores: [
     {
-      criterionId: { type: mongoose.Schema.Types.ObjectId, ref: "Criterion", required: true },
+      criterionId: { type: mongoose.Schema.Types.ObjectId, ref: "Criteria", required: true },
       score: { type: Number, required: true, min: 1, max: 5 },
       subScores: [{ type: Number, min: 1, max: 5 }], // Scores for sub-questions
     },

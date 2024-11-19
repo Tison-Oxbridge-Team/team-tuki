@@ -1,8 +1,9 @@
 const mongoose = require("mongoose");
 
 const TimeslotSchema = new mongoose.Schema({
+  scheduleId: { type: mongoose.Schema.Types.ObjectId, ref: "Schedule", required: true },
   sessionId: { type: mongoose.Schema.Types.ObjectId, ref: "Session", required: true },
-  startupId: { type: mongoose.Schema.Types.ObjectId, ref: "Startup", required: true },
+  startupId: { type: mongoose.Schema.Types.ObjectId, ref: "Startup", required: true }, //assigned startup
   startTime: { type: String, required: true },
   endTime: { type: String, required: true },
   status: {
