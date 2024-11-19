@@ -2,10 +2,11 @@ const express = require("express");
 const router = express.Router();
 const Startup = require("../models/Startup");
 const { authenticateToken } = require("../middleware/authMiddleware");
+const mongoose = require("mongoose");
 
 // Add a Startup
 router.post("/", authenticateToken, async (req, res) => {
-  const { name, teamLeader, email, pitchSchedule, room, remoteRoom } = req.body;
+  const { name, teamLeader, email} = req.body;
 
   try {
     // Check if the startup already exists
@@ -14,7 +15,7 @@ router.post("/", authenticateToken, async (req, res) => {
       return res.status(409).json({ message: "Startup with this email already exists" });
     }
 
-    const newStartup = new Startup({ name, teamLeader, email, pitchSchedule, room, remoteRoom });
+    const newStartup = new Startup({ name, teamLeader, email});
     const savedStartup = await newStartup.save();
 
     res.status(201).json({ message: "Startup added successfully", startup: savedStartup });

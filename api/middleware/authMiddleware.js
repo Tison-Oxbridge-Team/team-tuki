@@ -49,4 +49,17 @@ function requireAdmin(req, res, next) {
     next(); // Proceed to the next middleware or route handler
 }
 
-module.exports = { authenticateToken, requireAdmin };
+const checkRole = (requiredRole) => {
+    return (req, res, next) => {
+      const { role } = req.user; // Extract role from decoded token
+  
+      if (role !== requiredRole) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+  
+      next();
+    };
+  };
+  
+
+module.exports = { authenticateToken, requireAdmin, checkRole };
