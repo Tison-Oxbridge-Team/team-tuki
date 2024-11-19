@@ -107,4 +107,83 @@ router.put("/:id/settings", authenticateToken, async (req, res) => {
     res.status(500).json({ message: "Error updating round settings", error: err.message });
   }
 });
+
+  // Update Round Criteria
+  router.put("/:id/criteria", authenticateToken, async (req, res) => {
+    const { id } = req.params;
+    const { criteria } = req.body;
+
+    try {
+      // Calculate total weight and validate it sums to 100%
+      const totalWeight = criteria.reduce((sum, criterion) => sum + criterion.weight, 0);
+      if (totalWeight !== 100) {
+        return res.status(400).json({ 
+          message: "Total weight must sum to 100%" 
+        });
+      }
+
+      // Validate individual weights are between 0 and 100
+      const invalidWeights = criteria.some(criterion => criterion.weight < 0 || criterion.weight > 100);
+      if (invalidWeights) {
+        return res.status(400).json({ 
+          message: "Individual criterion weights must be between 0 and 100" 
+        });
+      }
+
+      const round = await Round.findById(id);
+      if (!round) {
+        return res.status(404).json({ message: "Round not found" });
+      }
+
+      // Update criteria and validate subquestions
+      round.criteria = criteria.map(criterion => ({
+        name: criterion.name,
+        weight: criterion.weight,
+        subquestions: criterion.subquestions.map(sub => ({
+          question: sub.question,
+          optional: sub.optional || false
+        }))
+      }));
+
+      await round.save();
+
+      res.status(200).json({ 
+        message: "Criteria updated successfully", 
+        criteria: round.criteria 
+      });
+    } catch (err) {
+      console.error("Error updating round criteria:", err);
+      res.status(500).json({ 
+        message: "Error updating round criteria", 
+        error: err.message 
+      });
+    }
+  });
+
+  // Get Round Criteria
+  router.get("/:id/criteria", authenticateToken, async (req, res) => {
+    const { id } = req.params;
+
+    try {
+      const round = await Round.findById(id);
+      if (!round) {
+        return res.status(404).json({ message: "Round not found" });
+      }
+
+      const totalWeight = round.criteria.reduce((sum, criterion) => sum + criterion.weight, 0);
+      const averageWeight = totalWeight / round.criteria.length;
+
+      res.status(200).json({ 
+        criteria: round.criteria,
+        totalWeight: totalWeight + '%',
+        averageWeight: averageWeight + '%'
+      });
+    } catch (err) {
+      console.error("Error fetching round criteria:", err);
+      res.status(500).json({ 
+        message: "Error fetching round criteria", 
+        error: err.message 
+      });
+    }
+  });
 module.exports = router;
