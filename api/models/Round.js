@@ -16,6 +16,7 @@ const RoundSchema = new mongoose.Schema({
     },
   ],
   sessions: [{ type: mongoose.Schema.Types.ObjectId, ref: "Session" }], // Sessions found in the round
+  results: [{ type: mongoose.Schema.Types.ObjectId, ref: "Results" }], // Results of the round
   settings: {
     allowMultipleJudges: { type: Boolean, default: true },
     enableNotifications: { type: Boolean, default: false },
