@@ -1,11 +1,11 @@
 {
   "name": "api",
   "version": "1.0.0",
-  "main": "index.ts",
+  "main": "index.js",
   "type": "commonjs",
   "scripts": {
     "test": "test",
-    "start": "npm start"
+    "start": "node index"
   },
   "author": "",
   "license": "ISC",
