@@ -1,50 +1,55 @@
 const mongoose = require("mongoose");
 
-// Timeslot Schema (nested within Session Schema)
+// Timeslot Schema
 const TimeslotSchema = new mongoose.Schema({
-  startupId: { type: mongoose.Schema.Types.ObjectId, ref: "Startup", required: true },
-  judges: [{ type: mongoose.Schema.Types.ObjectId, ref: "Judge", required: true }],
-  startTime: { type: Date, required: true },
-  endTime: { type: Date, required: true },
-  room: { type: String, required: true },
+  startupId: { type: mongoose.Schema.Types.ObjectId, ref: "Startup", required: true }, // Startup being judged
+  judges: [{ type: mongoose.Schema.Types.ObjectId, ref: "Judge", required: true }], // Judges assigned to this timeslot
+  startTime: { type: Date, required: true }, // Start time of the timeslot
+  endTime: { type: Date, required: true }, // End time of the timeslot
+  room: { type: String, required: true }, // Room or Zoom link
   status: {
     type: String,
     enum: ["Pending", "In Progress", "Completed"],
-    default: "Pending",
+    default: "Pending", // Default status
   },
-  createdAt: { type: Date, default: Date.now },
+  createdAt: { type: Date, default: Date.now }, // Creation timestamp
 });
 
 // Session Schema
 const SessionSchema = new mongoose.Schema({
+  judges: [{ type: mongoose.Schema.Types.ObjectId, ref: "Judge", required: true }], // Judges assigned to this session
+  startups: [{ type: mongoose.Schema.Types.ObjectId, ref: "Startup", required: true }], // Startups assigned to this session
   timeslots: [TimeslotSchema], // Array of timeslots for this session
+  createdAt: { type: Date, default: Date.now }, // Creation timestamp
 });
 
 // Schedule Schema
 const ScheduleSchema = new mongoose.Schema({
-  date: { type: Date, required: true },
+  date: { type: Date, required: true }, // Date of the schedule
   sessions: [SessionSchema], // Array of sessions for this schedule
+  createdAt: { type: Date, default: Date.now }, // Creation timestamp
 });
 
 // Round Schema
 const RoundSchema = new mongoose.Schema({
-  name: { type: String, required: true },
+  name: { type: String, required: true }, // Name of the round
   criteria: [
     {
-      name: { type: String, required: true },
-      weight: { type: Number, required: true, min: 0, max: 100 },
+      name: { type: String, required: true }, // Criterion name
+      weight: { type: Number, required: true, min: 0, max: 100 }, // Weightage of the criterion in percentage
       subquestions: {
-        questions: [{ type: String, required: true }],
-        optional: { type: Boolean, default: false },
+        questions: [{ type: String, required: true }], // Subquestion text
+        optional: { type: Boolean, default: false }, // Whether the subquestions are optional
       },
     },
   ],
-  schedule: [ScheduleSchema], // Array of schedules for this round
-  createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date },
+  schedule: [ScheduleSchema], // Array of schedules for the round
+  createdAt: { type: Date, default: Date.now }, // Creation timestamp
+  updatedAt: { type: Date }, // Update timestamp
 });
 
 module.exports = mongoose.model("Round", RoundSchema);
+
 
 
 

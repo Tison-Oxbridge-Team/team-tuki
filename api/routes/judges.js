@@ -2,8 +2,8 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const Judge = require("../models/Judge");
-const Session = require("../models/Session");
-const Score = require("../models/Score");
+// const Session = require("../models/Session");
+// const Score = require("../models/Score");
 const { authenticateToken } = require("../middleware/authMiddleware");
 
 const router = express.Router();
@@ -57,6 +57,15 @@ async function sendCredentialsEmail(email, password, name) {
 // Add Judge
 router.post("/add", authenticateToken, async (req, res) => {
   const { name, email, password, expertise } = req.body;
+  function generateRandomPassword(length = 12) {
+    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+";
+    let password = "";
+    for (let i = 0; i < length; i++) {
+      password += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return password;
+  }
+  
 
   try {
     const existingJudge = await Judge.findOne({ email });
@@ -64,14 +73,19 @@ router.post("/add", authenticateToken, async (req, res) => {
       return res.status(409).json({ message: "Judge with this email already exists" });
     }
 
+    // Generate random password
+    const password = generateRandomPassword();
+
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newJudge = new Judge({ name, email, password: hashedPassword, expertise });
     await newJudge.save();
+
+    // Send credentials to the judge's email
     await sendCredentialsEmail(email, password, name);
 
-    res.status(201).json({ message: "Judge added successfully", judge: newJudge });
+    res.status(201).json({ message: "Judge added successfully", judge: { name, email, expertise } });
   } catch (err) {
     console.error("Error adding judge:", err);
     res.status(500).json({ message: "Error adding judge", error: err.message });
@@ -92,7 +106,7 @@ router.post("/login", async (req, res) => {
       return res.status(401).json({ message: "Invalid email or password" });
     }
 
-    const token = jwt.sign({ id: judge._id, email: judge.email }, JWT_SECRET, { expiresIn: "1h" });
+    const token = jwt.sign({ id: judge._id, email: judge.email }, JWT_SECRET);
 
     res.status(200).json({ message: "Login successful", token, judge: { name: judge.name, email: judge.email } });
   } catch (err) {
@@ -128,7 +142,7 @@ router.get("/:id", authenticateToken, async (req, res) => {
 
 // Edit judge
 router.put("/:id", authenticateToken, async (req, res) => {
-  const { name, email, expertise } = req.body;
+  const { name, email, expertise, password } = req.body;
   
   try {
     const judge = await Judge.findById(req.params.id);
@@ -143,9 +157,16 @@ router.put("/:id", authenticateToken, async (req, res) => {
       }
     }
 
+    const updateFields = { name, email, expertise };
+    
+    if (password) {
+      const hashedPassword = await bcrypt.hash(password, 10);
+      updateFields.password = hashedPassword;
+    }
+
     const updatedJudge = await Judge.findByIdAndUpdate(
       req.params.id,
-      { name, email, expertise },
+      updateFields,
       { new: true }
     ).select("-password");
 
