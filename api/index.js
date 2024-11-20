@@ -7,6 +7,12 @@ const startupRoutes = require('./routes/startups.js');
 const roundRoutes = require('./routes/rounds.js');
 const judgeRoutes = require('./routes/judges.js')
 const schedulesRoutes = require("./routes/schedule.js")
+const criteriaRoutes = require("./routes/criteria.js")
+const sessionRoutes = require("./routes/session.js")
+
+const timeslotRoutes = require("./routes/timeSlot.js")
+
+
 const cors = require('cors');
 
 const app = express();
@@ -25,8 +31,11 @@ connectDB()
 app.use('/api/startups', startupRoutes);
 app.use('/api/rounds', roundRoutes);
 app.use('/api/judges', judgeRoutes);
-app.use('/api/schedules', schedulesRoutes);
+// app.use('/api/schedules', schedulesRoutes);
 app.use('/api/admin-auth', authRoutes);
+// app.use('/api/criteria', criteriaRoutes);
+// app.use('/api/session', sessionRoutes);
+//app.use('/api/timeslot', timeslotRoutes);
 
 
 
