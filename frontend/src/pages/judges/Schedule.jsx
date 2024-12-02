@@ -4,7 +4,7 @@ import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
-import "./schedule.css";
+import "../../css/schedule.css";
 
 const Schedule = ({ showModal, setShowModal }) => {
   // Accept props from parent

@@ -6,7 +6,7 @@ import {
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import PropTypes from "prop-types";
-import "./judges.css";
+import "../../css/judges.css";
 import { useEffect } from "react";
 
 function Judges({
